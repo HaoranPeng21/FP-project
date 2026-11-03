@@ -44,8 +44,8 @@ The following analysis definitions are retained:
 
 Only two named statistical functions remain: HC3 model calculations in the
 ABO script and the repeatedly evaluated Fitch score in the Maast script.
-Plotting-library callbacks remain where required for heatmap cell labels.
-All other analysis and plotting steps run at the top level or in ordinary loops.
+Scripts run from top to bottom. Short `lapply`/`vapply` callbacks remain for
+repeated row operations, alongside the heatmap library callbacks for cell labels.
 
 Statistical result tables were checked against the previously validated release.
 The benchmark, pathway, ABO and gene-sharing results are unchanged; Maast

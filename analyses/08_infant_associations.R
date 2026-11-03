@@ -25,7 +25,7 @@ d$endpoint <- factor(d$endpoint, levels = c("detection", "positive_abundance"), 
 
 p <- ggplot(d, aes(heatmap_column, heatmap_row, fill = log_effect)) + geom_tile(colour = "white") + geom_text(aes(label = symbol),
     size = 3) + facet_grid(endpoint ~ ., scales = "free", space = "free") + scale_fill_gradient2(low = "#6485A6",
-    mid = "white", high = "#CD5B48", midpoint = 0, name = "log(effect ratio)") + labs() + (ggplot2::theme_bw(base_size = 9,
+    mid = "white", high = "#CD5B48", midpoint = 0, name = "log(effect ratio)") + labs(x = NULL, y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 9,
     base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank())) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1), panel.grid = element_blank())
 

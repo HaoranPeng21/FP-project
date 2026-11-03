@@ -64,7 +64,7 @@ p_a <- ggplot(d, aes(species_label, n_phenotypes, fill = class_label)) + geom_co
     inherit.aes = FALSE, family = font_family, size = PT_BODY/.pt, colour = col_ink_soft) + scale_fill_manual(values = class_palette,
     drop = TRUE) + scale_y_continuous(limits = c(0, max(totals$total_phenotypes) + 2.2), breaks = scales::breaks_pretty(4),
     expand = expansion(mult = c(0, 0))) + labs(title = "a   Associated phenotypes per species", y = "Phenotypes (q ≤ 0.05)",
-    fill = "Phenotype class") + plot_theme + theme(panel.grid.major.y = element_line(colour = "#EDEFF1", linewidth = 0.26),
+    fill = "Phenotype class", x = NULL, colour = NULL) + plot_theme + theme(panel.grid.major.y = element_line(colour = "#EDEFF1", linewidth = 0.26),
     axis.text.x = element_text(face = "italic", angle = 32, hjust = 1, vjust = 1, size = PT_BODY), legend.position = "inside",
     legend.position.inside = c(0.995, 1.02), legend.justification = c(1, 1), legend.title = element_text(size = PT_BODY,
         face = "bold"), legend.key.height = unit(3, "mm"), legend.key.width = unit(3.4, "mm"), legend.key.spacing.y = unit(0.4,
@@ -133,7 +133,7 @@ for (case_index in seq_along(cases)) {
         limits = x_rng, expand = expansion(mult = c(0.03, 0.05)), labels = function(v) format(v, big.mark = ",",
             trim = TRUE)) + scale_y_continuous(limits = c(0, y_top), breaks = scales::breaks_pretty(4), expand = expansion(mult = c(0.01,
         0))) + labs(title = paste(spec$letter, spec$lead, spec$species), x = "Within-species ANI rank", y = expression(-log[10] *
-        "(" * italic(P)[meta] * ")")) + plot_theme + theme(plot.margin = margin(1, 5, 2, 1))
+        "(" * italic(P)[meta] * ")"), fill = NULL, colour = NULL) + plot_theme + theme(plot.margin = margin(1, 5, 2, 1))
     t <- merge(cs$track, cs$stats[c("gene_family", "hit_frequency", "rest_frequency")], by = "gene_family", all.x = TRUE,
         sort = FALSE)
     t <- t[order(t$plot_x), ]
@@ -181,7 +181,7 @@ for (case_index in seq_along(cases)) {
         xend = xmax + 0.44, y = -0.6, yend = -0.46), colour = col_rule, linewidth = 0.3) + geom_text(data = brackets,
         aes(xmid, -0.94, label = label), size = PT_BODY/.pt, family = font_family, colour = col_ink_soft) + scale_fill_manual(values = arrow_palette,
         guide = "none") + scale_colour_manual(values = cluster_palette, guide = "none") + scale_x_continuous(limits = c(x_min,
-        x_max), expand = c(0, 0)) + coord_cartesian(ylim = c(-1.15, 1.75), clip = "off") + labs() + theme_void(base_family = font_family,
+        x_max), expand = c(0, 0)) + coord_cartesian(ylim = c(-1.15, 1.75), clip = "off") + labs(x = NULL, y = NULL, fill = NULL, colour = NULL) + theme_void(base_family = font_family,
         base_size = PT_BODY) + theme(plot.margin = margin(1, 4, 0, 2))
     prev <- t[c("plot_x", "gene_label", "hit_frequency", "rest_frequency")]
     prev$hit_pct <- 100 * prev$hit_frequency
@@ -190,7 +190,7 @@ for (case_index in seq_along(cases)) {
         linewidth = 0.55) + geom_point(aes(plot_x, rest_pct), colour = col_rest, size = 1.15, stroke = 0) + geom_point(aes(plot_x,
         hit_pct), colour = col_present, size = 1.5, stroke = 0) + scale_x_continuous(limits = c(x_min, x_max),
         expand = c(0, 0)) + scale_y_continuous(limits = c(-6, 106), breaks = c(0, 50, 100), expand = c(0, 0)) +
-        labs(y = "Prevalence\n(%)") + plot_theme + theme(panel.grid.major.y = element_line(colour = "#EDEFF1",
+        labs(y = "Prevalence\n(%)", x = NULL, fill = NULL, colour = NULL) + plot_theme + theme(panel.grid.major.y = element_line(colour = "#EDEFF1",
         linewidth = 0.26), axis.line.x = element_blank(), axis.ticks.x = element_blank(), axis.text.x = element_blank(),
         axis.line.y = element_blank(), axis.title.y = element_text(size = PT_BODY, colour = col_ink_soft, lineheight = 0.95),
         plot.margin = margin(0, 4, 0, 2))
@@ -207,7 +207,7 @@ for (case_index in seq_along(cases)) {
         colour = NA) + scale_fill_manual(values = c(Absent = col_absent, Present = col_present), guide = "none") +
         scale_x_continuous(limits = c(x_min, x_max), expand = c(0, 0)) + scale_y_continuous(limits = c(-n_rows -
         0.5, -0.5), expand = c(0, 0)) + coord_cartesian(clip = "off") + labs(y = paste0(format(n_rows, big.mark = ","),
-        " genomes")) + theme_void(base_family = font_family, base_size = PT_BODY) + theme(axis.title.y = element_text(size = PT_BODY,
+        " genomes"), x = NULL, fill = NULL, colour = NULL) + theme_void(base_family = font_family, base_size = PT_BODY) + theme(axis.title.y = element_text(size = PT_BODY,
         colour = col_ink_soft, angle = 90, margin = margin(r = 1.5)), plot.margin = margin(1, 4, 1, 2))
     right <- p_track/p_prev/p_heat + plot_layout(heights = c(1, 0.66, 1.06))
     case_panels[[case_index]] <- (p_manhattan | right) + plot_layout(widths = c(1.04, 1.2))

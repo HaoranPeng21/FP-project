@@ -37,7 +37,7 @@ p <- ggplot(d, aes(group_label, species_label)) + geom_point(aes(size = prevalen
     colour = "#8F9BAD", stroke = 0.25) + scale_size_area(max_size = 5, limits = c(0, 100), name = "Prevalence (%)") +
     scale_fill_gradient2(low = "#6485A6", mid = "white", high = "#CD5B48", midpoint = 0, limits = c(-3, 3), oob = scales::squish,
         na.value = "white", name = "log2 abundance (vs 1%)") + facet_grid(~panel, scales = "free_x", space = "free_x") +
-    labs() + (ggplot2::theme_bw(base_size = 9, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+    labs(x = NULL, y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 9, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank())) + theme(axis.text.x = element_text(angle = 60, hjust = 0), axis.text.y = element_text(face = "italic"),
     legend.position = "bottom") + scale_x_discrete(position = "top")
 

@@ -114,14 +114,14 @@ p_map <- ggplot() + {
         geom_polygon(data = data, aes(x = x, y = y, group = part_id, subgroup = ring_id), fill = NA,
             colour = boundary_col, linewidth = boundary_linewidth))
 } + coord_fixed(ratio = 1, xlim = xr, ylim = c(-1.37, 1.37), expand = FALSE, clip = "off") + labs(title = title,
-    subtitle = subtitle) + theme_void(base_family = font_family) + theme(plot.title = element_text(size = 10,
+    subtitle = subtitle, x = NULL, y = NULL, fill = NULL, colour = NULL) + theme_void(base_family = font_family) + theme(plot.title = element_text(size = 10,
     face = "bold", hjust = 0, colour = ink, family = font_family, margin = margin(b = 2)), plot.subtitle = element_text(size = 7.5,
     hjust = 0, colour = muted, family = font_family, margin = margin(b = 4)), plot.title.position = "plot",
     legend.position = "bottom", legend.title = element_text(size = 7.5, colour = ink, family = font_family),
     legend.text = element_text(size = 7, colour = ink, family = font_family), legend.margin = margin(t = -6),
     plot.margin = margin(4, 4, 2, 4))
 if (!is.null(tag)) {
-    p_map <- p_map + labs(tag = tag)
+    p_map <- p_map + labs(tag = tag, x = NULL, y = NULL, fill = NULL, colour = NULL)
 }
 
 inset_xy <- {
@@ -195,7 +195,7 @@ b <- ggplot(d, aes(country_label, species_label)) + geom_point(aes(size = preval
     100), shape = 21, colour = "#6F7378", stroke = 0.2) + scale_size_area(max_size = 3.7, limits = c(0,
     100), name = "Detection rate (%)") + scale_fill_gradient(low = "white", high = "#6485A6", limits = c(0,
     100), guide = "none") + facet_grid(~continent, scales = "free_x", space = "free_x") + scale_x_discrete(position = "top") +
-    labs() + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+    labs(x = NULL, y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank())) + theme(axis.text.x = element_text(angle = 65, hjust = 0),
     axis.text.y = element_text(face = "italic"), legend.position = "right")
 

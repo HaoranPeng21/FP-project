@@ -30,7 +30,7 @@ for (species_id in unlist(pairs)) {
         Human = "#4DBBD5")) + scale_x_continuous(limits = c(0, 100), breaks = seq(0, 100, 25)) + labs(title = sub("^Faecalibacterium ",
         "F. ", sub("^Faecalibacterium prausnitzii_F$", "Faecalibacterium langellae", sub("^Faecalibacterium sp900539945$",
             "Faecalibacterium harmsenii", sub("^s__", "", z$display_name[1])))), subtitle = sprintf("A %d | H %d",
-        z$n_animal[1], z$n_human[1]), x = "Pathway prevalence (%)") + (ggplot2::theme_bw(base_size = 6,
+        z$n_animal[1], z$n_human[1]), x = "Pathway prevalence (%)", y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 6,
         base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank())) +
         theme(legend.position = "bottom", panel.grid.major.y = element_blank())
 }

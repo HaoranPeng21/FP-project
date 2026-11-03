@@ -53,7 +53,7 @@ for (i in 1:2) {
         ggrepel::geom_text_repel(data = lab, aes(label = label), nudge_x = 0.3, direction = "y", hjust = 0,
             size = 2.8, fontface = "italic", segment.colour = "grey65", min.segment.length = 0, max.overlaps = Inf,
             seed = 1, box.padding = 0.1) + scale_colour_manual(values = cols) + scale_x_continuous(breaks = 1:7,
-        labels = c("2w", "1m", "2m", "3m", "6m", "9m", "12m"), limits = c(1, 10.5)) + labs(y = title) +
+        labels = c("2w", "1m", "2m", "3m", "6m", "9m", "12m"), limits = c(1, 10.5)) + labs(y = title, x = NULL, fill = NULL, colour = NULL) +
         (ggplot2::theme_bw(base_size = 9, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
             legend.key = ggplot2::element_blank())) + theme(legend.position = "none")
 }

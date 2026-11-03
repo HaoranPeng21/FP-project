@@ -52,7 +52,7 @@ plots <- lapply(seq_len(nrow(target)), function(i) {
     counts$y <- (by[-1] + by[-length(by)])[as.integer(counts$Var2)]/2
     p <- ggplot(counts, aes(x, y, fill = log1p(Freq))) + geom_tile() + scale_fill_gradientn(colours = c("white",
         "#C9879E", "#834C7D", "#2D1E3E"), limits = log1p(c(0, 10000)), breaks = log1p(c(0, 1, 10, 100, 1000, 10000)),
-        labels = c(0, 1, 10, 100, 1000, 10000), name = "count (log1p)") + labs(x = target$species_i_short[i], y = target$species_j_short[i]) +
+        labels = c(0, 1, 10, 100, 1000, 10000), name = "count (log1p)") + labs(x = target$species_i_short[i], y = target$species_j_short[i], fill = NULL, colour = NULL) +
         (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
             legend.key = ggplot2::element_blank())) + coord_fixed(ratio = diff(xr)/diff(yr), expand = FALSE) +
         theme(legend.position = "right")

@@ -26,14 +26,14 @@ stopifnot(sum(counts$Freq) == 17103)
 a <- ggplot(catalog, aes(CheckM2.completeness, CheckM2.contamination, colour = Host1)) +
   geom_point(size = .45, alpha = .35) +
   labs(x = "CheckM2 completeness (%)", y = "CheckM2 contamination (%)", colour = "Host",
-       title = "Final catalogue: 17,103 genomes / 83 species") + theme_bw(base_size = 8)
+       title = "Final catalogue: 17,103 genomes / 83 species", fill = NULL) + theme_bw(base_size = 8)
 
 rare <- read.delim(file.path(data_dir, "rarefaction.tsv"), check.names = FALSE, quote = "")
 stopifnot(max(rare$genomes_sampled) == 17103, max(rare$q975_species) <= 83)
 
 b <- ggplot(rare, aes(genomes_sampled, mean_species)) + geom_ribbon(aes(ymin = q025_species, ymax = q975_species),
     fill = "#D6EAF1") + geom_line(colour = "#4DBBD5") + geom_hline(yintercept = 83, linetype = 2) + labs(x = "Sampled genomes",
-    y = "Observed species", title = "Species rarefaction") + (ggplot2::theme_bw(base_size = 8, base_family = "sans") +
+    y = "Observed species", title = "Species rarefaction", fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8, base_family = "sans") +
     ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank()))
 
 mapping <- read.delim(file.path(data_dir, "benchmark_mapping.tsv"), check.names = FALSE, quote = "")
@@ -48,7 +48,7 @@ mapping$label <- paste(mapping$sgb, ifelse(mapping$category == "Unresolved", "un
 mapping$y <- rev(seq_len(nrow(mapping)))
 
 c <- ggplot(mapping, aes(x = 0, y = y, label = label, colour = category)) + geom_text(hjust = 0, size = 2.5) +
-    xlim(0, 1.3) + labs(title = "SGB mapping") + theme_void() + theme(legend.position = "bottom")
+    xlim(0, 1.3) + labs(title = "SGB mapping", x = NULL, y = NULL, fill = NULL, colour = NULL) + theme_void() + theme(legend.position = "bottom")
 
 ggplot2::ggsave(filename = file.path(out_dir, "Figure_S2ABC.pdf"), plot = a + b + c + patchwork::plot_layout(widths = c(1,
     1, 1.2)), width = 12, height = 5.5, device = grDevices::cairo_pdf, limitsize = FALSE)

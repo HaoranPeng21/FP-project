@@ -78,7 +78,7 @@ for (i in 1:4) {
             "1", "10")) + scale_y_log10(breaks = c(proxy, 0.001, 0.01, 0.1, 1, 10), labels = c("0", ".001",
         ".01", ".1", "1", "10")) + annotate("text", x = 0.03, y = 0.00035, label = sprintf("TP %s  FN %s\nFP %s  TN %s",
         m$TP, m$FN, m$FP, m$TN), size = 2.6) + labs(title = title, x = "Expected relative abundance (%)",
-        y = "Reported relative abundance (%)") + coord_equal() + (ggplot2::theme_bw(base_size = 8, base_family = "sans") +
+        y = "Reported relative abundance (%)", fill = NULL, colour = NULL) + coord_equal() + (ggplot2::theme_bw(base_size = 8, base_family = "sans") +
         ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank()))
 }
 
@@ -93,7 +93,7 @@ mm$tool <- factor(mm$tool, levels = c("Sylph", "MetaPhlAn4"))
 c <- ggplot(mm, aes(metric, value, fill = tool)) + geom_col(position = "dodge", width = 0.75) + geom_text(aes(label = sprintf("%.3f",
     value)), position = position_dodge(0.75), angle = 90, hjust = -0.1, vjust = 0.5, size = 2.4) + scale_fill_manual(values = cols) +
     scale_y_continuous(limits = c(0, 1.14), expand = c(0, 0)) + scale_x_discrete(labels = c(recall = "Rec.",
-    precision = "Prec.", FPR = "FPR", rho = "ρ", MAE = "MAE (pp)")) + labs(y = "Value") + (ggplot2::theme_bw(base_size = 8,
+    precision = "Prec.", FPR = "FPR", rho = "ρ", MAE = "MAE (pp)")) + labs(y = "Value", x = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8,
     base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank())) +
     theme(legend.position = "top")
 

@@ -162,7 +162,7 @@ gal$label <- factor(sub("^Faecalibacterium ", "F. ", sub("^Faecalibacterium prau
 
 c <- ggplot(gal, aes(100 * n_pathway_positive/n_genomes_total, label)) + geom_col(fill = "#C6B58A", width = 0.7) +
     geom_errorbar(aes(xmin = 100 * ci$lower, xmax = 100 * ci$upper), orientation = "y", width = 0.2) +
-    xlim(0, 100) + labs(title = "A-antigen utilization completeness", x = "Prevalence (%)") + (ggplot2::theme_bw(base_size = 8,
+    xlim(0, 100) + labs(title = "A-antigen utilization completeness", x = "Prevalence (%)", y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8,
     base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank()))
 
 forest <- pooled[pooled$species %in% show, ]
@@ -176,7 +176,7 @@ forest$label <- factor(sub("^Faecalibacterium ", "F. ", sub("^Faecalibacterium p
 d <- ggplot(forest, aes(effect, label)) + geom_vline(xintercept = 0, colour = "grey65", linetype = 2) +
     geom_errorbar(aes(xmin = lower, xmax = upper), orientation = "y", width = 0.2) + geom_point(aes(shape = q <
     0.05), size = 2) + scale_shape_manual(values = c(`TRUE` = 16, `FALSE` = 1)) + labs(title = "A/AB secretors versus Others",
-    x = "Adjusted CLR difference (HC3 95% CI)", shape = "BH q <0.05") + (ggplot2::theme_bw(base_size = 8,
+    x = "Adjusted CLR difference (HC3 95% CI)", shape = "BH q <0.05", y = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8,
     base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(), legend.key = ggplot2::element_blank()))
 
 box_species <- c("Faecalibacterium longum", "Faecalibacterium butyricigenerans")
@@ -200,7 +200,7 @@ for (i in 1:2) {
         "A/AB\nNS", "B/O\nS", "B/O\nNS")) + scale_fill_manual(values = (ggsci::pal_npg())(10)[1:4]) +
         labs(title = sub("^Faecalibacterium ", "F. ", sub("^Faecalibacterium prausnitzii_F$", "Faecalibacterium langellae",
             sub("^Faecalibacterium sp900539945$", "Faecalibacterium harmsenii", sub("^s__", "", sp)))),
-            y = "CLR abundance") + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+            y = "CLR abundance", x = NULL, fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
         legend.key = ggplot2::element_blank())) + theme(legend.position = "none")
 }
 

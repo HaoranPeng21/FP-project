@@ -129,7 +129,7 @@ scatter <- ggplot(pairs, aes(phylo_distance, shared_jaccard)) + geom_point(aes(f
     aes(label = key_id, colour = highlight_group), size = 2.5, seed = 1, max.overlaps = Inf) + scale_colour_manual(values = c(`Divergent yet similar` = "#00A087",
     `Top overall similarity` = "#E64B35")) + scale_fill_gradientn(colours = colours, trans = scales::pseudo_log_trans(sigma = 0.001),
     name = "Jaccard") + labs(x = "Phylogenetic distance (bac120 path length)", y = "Gene-repertoire Jaccard", subtitle = sprintf("300 pairs; Spearman rho = %.3f; QAP P = %.1e",
-    rho, frozen$qap_two_sided_p)) + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
+    rho, frozen$qap_two_sided_p), fill = NULL, colour = NULL) + (ggplot2::theme_bw(base_size = 8, base_family = "sans") + ggplot2::theme(panel.grid.minor = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank())) + theme(legend.position = "bottom")
 key <- h
 key$label <- paste(key$key_id, key$species_i_short, "vs", key$species_j_short)

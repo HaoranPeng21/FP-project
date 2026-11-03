@@ -22,7 +22,7 @@ timeline <- data.frame(x = c(0, 1.4, 2.5, 2.5, 3.8, 5, 6.2, 7.4), y = c(1, -1, 1
 a <- ggplot(timeline, aes(x, 0)) + geom_hline(yintercept = 0, colour = "#6485A6") + geom_segment(aes(xend = x,
     yend = y * 0.65), colour = "#91ACC4") + geom_point(shape = 21, fill = "white", colour = "#6485A6", size = 2) +
     geom_text(aes(y = y * 0.8, label = year), fontface = "bold", size = 3) + geom_text(aes(y = y * 1.35, label = label),
-    size = 2.15, lineheight = 1) + coord_cartesian(ylim = c(-2.3, 2.3), clip = "off") + theme_void() + labs(title = "Cultivated species descriptions (elapsed time compressed)") +
+    size = 2.15, lineheight = 1) + coord_cartesian(ylim = c(-2.3, 2.3), clip = "off") + theme_void() + labs(title = "Cultivated species descriptions (elapsed time compressed)", x = NULL, y = NULL, fill = NULL, colour = NULL) +
     theme(plot.title = element_text(size = 10, face = "bold"))
 
 catalog <- read.csv(file.path(data_dir, "catalogue.csv"), check.names = FALSE)
