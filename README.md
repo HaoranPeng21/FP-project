@@ -1,82 +1,155 @@
-# Faecalibacterium 项目最终整理版
+# FP-project
 
-本目录是源项目 `/scratch/p312334/project/8--Faecalibacterium` 的非破坏性整理与审计结果。源文件没有被移动或覆盖；小型结果复制到这里，大型原始矩阵和数据库通过符号链接保留出处。
+**Faecalibacterium comparative genomics and microbiome ecology**
 
-## 最终主数据链
+FP-project provides R analysis and visualization code for investigating the genomic
+diversity, host-associated functions and ecological distribution of
+*Faecalibacterium*. It connects genome phylogeny and metagenomic profiling
+benchmarks with host and geographic distributions, early-life colonization,
+co-abundance patterns, host phenotype associations, ABO/FUT2 comparisons,
+gene-repertoire sharing and within-species genetic associations.
 
-```text
-FP_Summary_V4.csv：48,395 genomes
-        ↓ CheckM2 completeness > 80 且 contamination < 5
-17,104 project-defined high-quality genomes
-        ↓ skani triangle + average linkage，95% ANI cut
-84 skani_95_average groups = 84 species
-        ↓ 每组 1 个代表基因组
-84 representatives
+The repository contains **19 independent R analysis modules**, covering the study's
+**six main figures and seven supplementary figures**. Each file in `analyses/`
+corresponds to one analysis, with shared functions in `R/` and a single runner,
+`run.R`. All 19 modules were executed successfully with the existing private
+inputs; the checked outputs comprised 27 PDF panels or panel groups. See
+[VALIDATION.md](VALIDATION.md) for the verification scope and source-version notes.
+
+This is a **code-only repository**. Participant records, abundance matrices,
+genome metadata, statistical result tables, trees, generated figures and private
+configurations are not distributed. Public species names, pathway names and
+schematic labels remain in the code where they explain an analysis. Input schemas
+and private-data configuration are described in [INPUTS.md](INPUTS.md).
+
+This is a **data-to-figure release**. It starts from the private catalogue,
+annotation matrices, benchmark predictions and frozen statistical results listed
+in [INPUTS.md](INPUTS.md). Genome assembly, sequence alignment, profiling,
+pangenome construction and the upstream genome-level association scans are not
+rerun. No Python scripts, shell programs or historical project scripts are called.
+The code produces analysis panels and natural panel groups; the manuscript's
+manual page arrangement is not reproduced pixel for pixel.
+
+## Run
+
+Use R 4.5.1 or a compatible environment; see [DEPENDENCIES.md](DEPENDENCIES.md).
+
+```bash
+Rscript install_dependencies.R
+Rscript validate_code.R
+Rscript run.R --list
 ```
 
-最终物种键固定为 `skani_95_average`。`Haoran_species` 只有 83 个唯一字符串，是因为 group 19 和 group 23 被赋予了同一个 GTDB 标准化展示名；两组 ANI 为 94.20%，仍应作为两个独立 species。另一个旧列 `skani_group` 也有 84 组，但有 3 个 genome 与 `skani_95_average` 的归属不同，不能混用。
+Keep the private data outside this repository. Set the project root and a separate
+private output directory. `R/inputs.R` gives paths relative to the data root.
 
-17,104 在本项目中可称为“高质量基因组”，但方法部分必须同时写清项目阈值；它不等同于完整的 MIMAG high-quality MAG 定义。
+```bash
+export FP_DATA_ROOT=/path/to/private/project
+export FP_OUTPUT_DIR=/path/to/private/figure_outputs
+export FP_CONFIG_FILE=/path/to/private/config.local.R
+export OPENBLAS_NUM_THREADS=1
+export OMP_NUM_THREADS=1
+Rscript run.R all
+```
 
-## V4 中各 resource 的基因组数
+Copy `config.example.R` outside the repository and replace its example paths.
+Three inputs located outside the original project tree require explicit overrides:
+the ABO abundance matrix, ABO/FUT2 table and pairwise gene-prevalence table.
+Any other input key can also be overridden, so the original directory structure
+is optional. Missing inputs cause an explicit error; data are never downloaded or
+replaced with synthetic values.
 
-| Resource | V4 genomes | 高质量 genomes |
-|---|---:|---:|
-| 00SPIRE | 31,476 | 9,543 |
-| UHGG | 7,205 | 4,278 |
-| DAG3 | 6,485 | 1,267 |
-| Lifeline_Next | 1,909 | 1,002 |
-| GTDB | 904 | 703 |
-| NCBI | 167 | 167 |
-| 1000IBD | 141 | 66 |
-| Africa | 98 | 69 |
-| UMCG | 10 | 9 |
-| **合计** | **48,395** | **17,104** |
+Run one analysis or a subset by its numeric prefix:
 
-## 13 项分析的整理状态
+```bash
+Rscript run.R 02
+Rscript run.R 03 04 05
+```
 
-| 目录 | 状态 | 可用结论 |
+Optional settings: `FP_PNG=0` disables optional PNGs, `FP_FONT` selects a local
+font, and `FP_R_LIBS` supplies additional R library directories separated by the
+platform path separator. The default font is the portable `sans` family.
+
+Each run writes PDFs, result summaries, `run_receipt.tsv`, `sessionInfo.txt` and a
+private input-path/checksum receipt under `FP_OUTPUT_DIR`. The output directory
+must be outside the repository. These outputs can contain private scientific
+results or paths and are not part of this code-only release.
+
+## Figure-to-code map
+
+| Figure/panels | R script | Starting point |
 |---|---|---|
-| [01_genome_collection](01_genome_collection/README.md) | `FINAL` | V4 resource 数量及高质量数量已重新计数、作图 |
-| [02_species_rarefaction_qc](02_species_rarefaction_qc/README.md) | `FINAL` | 84 species、rarefaction、CheckM2、84 representatives 已验证 |
-| [03_ani_umap_phylogeny](03_ani_umap_phylogeny/README.md) | `FINAL_WITH_DECLARED_EXCLUSIONS` | 17,104-genome ANI dendrogram；UMAP 嵌入 17,076，明确排除 28 个低连通 genome |
-| [04_animal_phylogeny](04_animal_phylogeny/README.md) | `REDONE_REPRODUCIBLE` | 17,104-tip GTDB-Tk tree 已按上传的 971-tip 表精确剪枝；人和动物 genome 位于共享物种谱系，支持跨宿主共享/生态联系；单棵树不能证明传播方向 |
-| [05_gene_sharing](05_gene_sharing/README.md) | `FINAL_25_GROUP_SUBSET` | 3,968-genome pangenome 的 25 个标签已一对一重标到 final-84 的 25 个 group；可展示 gene sharing，但不是 84 组全覆盖且不能称 HGT |
-| [05a_functional_annotation](05a_functional_annotation/README.md) | `REDONE_NUCLEOTIDE_CAMPAIGN` | 源数据有两套 gapseq 运行——蛋白输入走 blastp 打 Prokka 蛋白组，核酸输入走 **tblastn 打 contig**——共用同一个绝对 bitscore 200 阈值而打分不可互换，**不可混用**。推荐核酸口径（4,498 genomes / 19 groups）。物种功能分化与精氨酸–腐胺路线对调（lineage marker，非宿主效应）两口径一致；**宿主效应两口径 strict 结果零重叠、不可报告**，2026-08-19 的 β-氧化结论已撤回；表型 split 只报 prevalence 差值不给 p 值 |
-| [06_representatives_sylph_benchmark](06_representatives_sylph_benchmark/README.md) | `LOD_VALIDATED_RANDOM1000_RUNNING` | 85-run 固定梯度/LoD benchmark 已验证；按原方法重建的 final-84、随机 5-group、1,000-replicate 主 benchmark 正在运行（主数组 30649953；task 34 重试 30652262；最终评估 30652810） |
-| [06a_early_life_mother_infant](06a_early_life_mother_infant/README.md) | `EXPANDED_84_CONTEXT` | 4,577 个 LLNEXT profile、53 个实际物化 species rows；总体检出率由 2 周 3.02% 上升到 12 月 75.31%，总体及物种轨迹均带 Wilson 95% CI，并显示 6 个全局 prevalence≤5% 的重复低频早期检出物种 |
-| [07_coabundance_network](07_coabundance_network/README.md) | `FINAL_DESCRIPTIVE` | 报告“在 nominally significant cohorts 中”的正/负方向比例，不解释为直接互作 |
-| [08_geography](08_geography/README.md) | `FINAL_DESCRIPTIVE` | 37,666 个去重 stool samples；continent/country 均为统一 muted-red 气泡矩阵，旧非 slide 图已删除 |
-| [09_phenotype_meta_analysis](09_phenotype_meta_analysis/README.md) | `REDONE_FULL_CHAIN_VALIDATED` | 修复 CAD 多层级分母后重跑；abundance 与 prevalence 分别做 endpoint-wide BH-FDR，另以固定规则归纳 23 个跨端点同向 broad axes |
-| [09a_bile_acid_pangenome](09a_bile_acid_pangenome/README.md) | `NEW_VALIDATED_25_GROUP_SUBSET` | 胆汁酸候选基因呈物种/菌株偏好；*F. duncaniae* 富集 3β-HSDH 模块，但未检出完整 canonical bai 或 UDCA 7-epimerization 通路；基因分布与 meta 效应的 154 项相关均未通过 FDR |
-| [10_blood_group](10_blood_group/README.md) | `ORIGINAL_FIGURE_EXACTLY_REPRODUCED` | 正式 A/B 图与旧脚本在数据变换、分组、检验、颜色和版式上一致，tests TSV byte-identical；协变量调整两部分模型保留为补充 |
-| [11_intraspecies_association](11_intraspecies_association/README.md) | `REDONE_NULL_IL6` | 709 个双预处理 ID 已显式统一选 kneaddata；IL6 未复现，旧 succinate/炎症机制解释不成立 |
+| 1A | `01_catalogue_tree.R` | bac120 tree and frozen 17,103-tip annotations |
+| 1B–D; S2D–E | `02_benchmark.R` | strict83/shared24 predictions and frozen 901-run selection |
+| 2A | `03_pathway_prevalence.R` | genome counts for all 5,256 pathway comparisons |
+| 2B | `04_host_distribution.R` | 19-species × 12-host genome counts |
+| 2C; S3 | `05_animal_trees.R` | four species subtrees and full 998-tip selected overview |
+| 3A | `06_human_distribution.R` | audited host-stratum summaries and 14-species order |
+| 3B–C | `07_infant_trajectories.R` | 10-species timepoint summaries, infant-bootstrap intervals and frozen two-part GEE tests |
+| 3D | `08_infant_associations.R` | selected adjusted longitudinal-model coefficients |
+| 4 | `09_coabundance.R` | bac120 partner tree, cohort direction counts and frozen REML meta-results |
+| 5A | `10_phenotype_meta.R` | frozen phenotype meta-analysis, full prevalence and species order |
+| 5B–F | `11_abo.R` | abundance, ABO/FUT2, covariates and GalNAc counts |
+| 6 | `12_within_species.R` | frozen genome scans and PC5 logistic/Firth gene-panel tables |
+| S2A–C | `13_catalogue_qc.R` | catalogue quality metrics, rarefaction estimates and SGB mapping |
+| S5 | `14_geography.R` | country counts, boundaries and frozen country prevalence |
+| S6A–B | `15_gene_sharing.R` | 25-species repertoire Jaccard, representatives and bac120 tree |
+| S6C–F | `16_gene_pair_prevalence.R` | shared-family prevalence for highlighted pairs 1, 3, 4, 7 |
+| S7 | `17_maast_tree_permanova.R` | Maast trees and genome-tip continent annotations |
+| S4 | `18_host_pathways.R` | retained nominal host-associated pathway screen |
+| S1 | `19_taxonomy_history.R` | public timeline labels and catalogue release crosswalk |
 
-## 建议先看
+Script filenames are relative to `analyses/`. The supplementary numbering above
+follows the supplied PDFs; S5 is a country distribution, S6 gene sharing and S7
+Maast phylogeography. S1 is an illustrative R reconstruction: its original drawing
+script was not found. Its release crosswalk uses the modal catalogue label tuple
+for each displayed lineage and does not assert that every genome has that tuple.
 
-1. [完整技术审计报告](00_audit_index/AUDIT_REPORT.md)
-2. [机器可读状态表](00_audit_index/STATUS_MATRIX.tsv)
-3. [尚需处理事项](00_audit_index/ACTION_REGISTER.tsv)
-4. [跨产物验证](00_audit_index/tables/REDO_VALIDATION.tsv)
-5. [11/11 statistical fallacy scan](00_audit_index/FALLACY_SCAN.md)
-6. [最终图件 QA 与推荐入口](00_audit_index/FIGURE_QA.md)
-7. [文件清单](00_audit_index/MANIFEST.tsv)
-8. [原始 slide 与配色说明](00_audit_index/reference/SLIDE_STYLE_GUIDE.md)
+## Preserved analysis definitions
 
-## 结果表述边界
+- **Benchmark:** all83, same21 and shared24 are separate scopes. The supplied PDF's
+  S2D–E titles say same21, but its TP/FN/FP/TN and Figure 1C metrics identify
+  **shared24** (1,300 targets; 21,624 cells per tool). The R code follows those
+  numerical inputs and labels the comparison shared24. The 901-run selection is read unchanged; redundant original
+  group-23 simulations are excluded upstream. Zero predictions are displayed at
+  a labelled positive proxy on logarithmic axes and remain zero in scoring.
+- **Pathways:** Figure 2A recomputes Fisher tests and BH across all 5,256 comparisons.
+  The retained display is 14 nonredundant profiles plus two shared backgrounds;
+  stars additionally require an absolute prevalence difference of at least 25
+  percentage points. Figure S4 retains its nominal screen and inherited global
+  q-values; no correction is performed on the selected rows alone.
+- **Distribution:** human bubbles use prevalence for area and mean abundance
+  among detected samples for colour, retaining all 14 eligible species in 3A.
+  The supplied 3B–C uses the earlier ten-species two-part analysis: C shows the
+  arithmetic mean among detected samples, with bootstrap CIs; stars retain the
+  binomial-logit detection and log-abundance Gaussian GEE tests, with infant
+  clustering and endpoint-wise ten-species BH correction. The later 14-species
+  zero-inclusive trajectory revision is not the supplied figure. S5 uses countries, at least 50 samples per country, and
+  overall prevalence strictly greater than 5%.
+- **Co-abundance:** colour is the positive direction fraction among cohorts
+  with nominal P<0.05. It is not a proportion significant in all cohorts. Thin
+  and thick frames retain nominal meta-P and global BH-q meanings respectively.
+- **Phenotypes:** Figure 5A retains upstream phenome-wide q-values, at least
+  two contributing studies and the full-sample prevalence filter. Display
+  filtering never defines a new FDR family.
+- **ABO:** CLR uses all 33 named Faecalibacterium species and pseudocount 1e-6;
+  tests and plots are carriers-only. Four-group pairwise Wilcoxon tests use one
+  84-test BH family. HC3 models adjust age, sex, BMI and log10 read depth; the
+  three-comparator and pooled contrasts retain 42- and 14-test families.
+- **Within species:** Figure 6 preserves the three supplied cases and 26 shown
+  gene families. Family q-values are inherited from PC5 logistic/Firth tests
+  across the complete eligible family set per comparison. A physical-neighbourhood
+  carriage bracket is descriptive and is not a cluster-level q-value.
+- **Gene sharing:** this is the 25-species pangenome subset, not all 83 species.
+  Native R recomputes representative distances, Jaccard checks and a 99,999-label
+  QAP permutation test. The original frozen QAP P is retained in the figure;
+  both that P and the R recomputation are exported. R and NumPy use different
+  random-number generators, so finite-permutation P-values can differ slightly.
+- **Maast:** PERMANOVA, PERMDISP and Fitch tests are recomputed in R with 1,999
+  permutations and the original seeds. Known-continent groups require at least
+  five genomes. BH is across four species separately for each test. Significant
+  PERMDISP remains visible alongside PERMANOVA.
 
-- Animal tree 支持动物肠道是 *Faecalibacterium* 基因组多样性的重要栖息地，并显示人–动物共享物种级谱系；不能仅凭该树断言近期传播、方向或 reservoir。
-- Gene sharing 是共享基因库的描述性 proxy，不等于 HGT，也不能单独证明物种分化的因果机制。
-- Co-abundance 的 “always positive/negative” 仅指达到 nominal `p<0.05` 的 cohort 中方向一致。
-- 正式 fixed-bin benchmark 中，Sylph 在全部 84 组的 `0.01%`、`0.1%`、`5%` bins 均检出，84-group 零填充 precision 为 1、false positives 为 0；`0.0001%` 与 `0.001%` 均未检出。`0.001%` 约对应中位 195 条 150-bp reads，`0.01%` 约对应中位 1,950 条，因此当前模拟支持的经验阈值是约 `0.01%`，不是 `0.001%`。MetaPhlAn4 名称 crosswalk 仅保守唯一解析 21/84 组，序列经验映射仅得到 17/84 个唯一 SGB，且 18 组发生 SGB collision；但在可唯一解析组中，本设计所测的 `0.01%`、`0.1%`、`5%` 档检出和定量总体良好。该结果说明定制 Sylph workflow 对扩展物种集合覆盖更完整，不等于证明 MetaPhlAn4 软件算法失效。
-- 当前 IL6 重分析为阴性；不能继续使用旧 IL6–succinate–inflammation 机制链。
-- **05a 的宿主功能差异不可报告**：gapseq 蛋白口径与核酸口径的 strict 结果零重叠且方向不同，无法与注释流程选择分离；2026-08-19 基于混用两种口径报告的「脂肪酸 β-氧化在动物基因组中缺失」已撤回（注释假象）。
-- 05a 的两套 gapseq 运行来自数据方（`p318243`），不是本项目生成；核酸口径用 tblastn 直接打 contig，不依赖 Prokka 基因预测，蛋白口径完全建立在 Prokka call 之上。
-- 05a 的功能–表型关联：跨 13 个物种的 163,625 次相关检验为阴性且零假设校准良好（小 p 值数量不超过随机期望）。「同一 phenotype 上方向相反的物种功能是否不同」改为只报告 prevalence 差值、不给 p 值——每侧最多 4 个物种，置换 p 的下限（0.167–0.25）已高于任何 FDR 阈值。差值本身很大（最大 96.9 个百分点），但 BMI/DCA/Age 的正向侧都只有 1 个物种，构造上等同于该物种的 repertoire 特征。
-- 05a 中纯动物 group 与纯人 group 的「独有功能」绝大多数是 lineage marker：它们在混合宿主物种内部并不区分宿主。引用该表必须带 `verdict` 列，并写明是哪个 gapseq campaign。
-
-目录策略见 [ORGANIZATION_POLICY.md](00_audit_index/ORGANIZATION_POLICY.md)。
-
-当前推荐输出一律位于各模块 `artifacts/final/`；被替代结果只放 `artifacts/archive/`。这一规则也适用于后续更新。
-# FP-project
-# FP-project
+The implementation and local verification record are described in
+[VALIDATION.md](VALIDATION.md). Raw data access remains governed by the owners of
+the original datasets; this repository does not provide access to those data.

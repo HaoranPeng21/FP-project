@@ -1,0 +1,15 @@
+# This is a code-only repository. Use an allowlist to avoid adding private data.
+*
+!*/
+!*.R
+!*.md
+!.gitignore
+config.local.R
+**/config.local.R
+data/
+outputs/
+private/
+validation/
+.Rhistory
+.RData
+.Rproj.user/
