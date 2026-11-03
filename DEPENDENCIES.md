@@ -1,9 +1,16 @@
 # Tested R environment
 
-The local execution used R 4.5.1 with Cairo PDF support on Linux. The following
-versions were loaded or checked in that environment. `install_dependencies.R`
-installs missing packages; it is a convenience installer, not a version lock.
-Use the versions below when reproducing the checked environment.
+Use R 4.5.1 with Cairo PDF support. Each analysis loads its own packages.
+Install the required packages once:
+
+```r
+install.packages(c("ape", "circlize", "cowplot", "data.table", "dplyr", "ggnewscale",
+                   "ggplot2", "ggrepel", "ggsci", "jsonlite", "patchwork", "readr",
+                   "scales", "tibble", "tidyr", "vegan", "BiocManager"))
+BiocManager::install(c("ComplexHeatmap", "ggtree"))
+```
+
+The versions used for local validation are below.
 
 | Package | Version |
 |---|---|
